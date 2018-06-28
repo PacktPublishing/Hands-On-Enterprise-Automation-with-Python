@@ -1,0 +1,297 @@
+
+version 15.5
+service timestamps debug datetime msec
+service timestamps log datetime msec
+no platform punt-keepalive disable-kernel-core
+platform console serial
+!
+hostname PE-CSR3
+!
+boot-start-marker
+boot-end-marker
+!
+!
+!
+no aaa new-model
+!
+ip vrf ABC
+ rd 34:34
+ route-target export 34:34
+ route-target import 34:34
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+
+
+
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+subscriber templating
+!
+multilink bundle-name authenticated
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+license udi pid CSR1000V sn 9OVW5ZV9L9Z
+!
+spanning-tree extend system-id
+!
+!
+redundancy
+bridge-domain 30 
+!
+!
+!
+!
+!
+!
+! 
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+! 
+! 
+! 
+! 
+! 
+! 
+!
+!
+interface Loopback0
+ ip address 172.16.3.3 255.255.255.255
+ ip ospf 1 area 0
+!
+interface GigabitEthernet1
+ no ip address
+ negotiation auto
+ service instance 10 ethernet
+  encapsulation dot1q 10
+  rewrite ingress tag pop 1 symmetric
+  bridge-domain 10
+ !
+ service instance 20 ethernet
+  encapsulation dot1q 20
+  rewrite ingress tag pop 1 symmetric
+  bridge-domain 20
+ !
+ service instance 30 ethernet
+  encapsulation dot1q 30
+  rewrite ingress tag pop 1 symmetric
+  bridge-domain 30
+ !
+ service instance 40 ethernet
+  encapsulation dot1q 40
+  rewrite ingress tag pop 1 symmetric
+  bridge-domain 40
+ !
+!
+
+interface GigabitEthernet2
+ switchport
+ switchport trunk allowed 300,532
+ switchport port-security
+ switchport port-security violation protect
+ switchport port-security aging time 5
+ switchport port-security aging type inactivity
+ spanning-tree portfast
+ spanning-tree bpduguard enable
+
+
+interface GigabitEthernet2.34
+ encapsulation dot1Q 34
+ ip address 172.16.34.3 255.255.255.0
+ ip ospf network point-to-point
+ ip ospf 1 area 0
+ mpls ip
+!
+
+
+interface GigabitEthernet3
+ no ip address
+ shutdown
+ negotiation auto
+!
+interface GigabitEthernet4
+ no ip address
+ shutdown
+ negotiation auto
+
+
+!
+interface GigabitEthernet5
+ switchport access vlan 300
+ spanning-tree portfast
+ spanning-tree bpduguard enable
+!
+interface GigabitEthernet6
+ duplex full
+ speed 100
+ switchport access vlan 300
+ spanning-tree portfast
+ spanning-tree bpduguard enable
+
+
+
+interface GigabitEthernet6.50
+ encapsulation dot1Q 50
+ ip address 172.16.50.1 255.255.255.0
+ ip ospf network point-to-point
+ ip ospf 1 area 0
+ mpls ip
+
+
+interface BDI10
+ ip vrf forwarding ABC
+ ip address 192.168.10.3 255.255.255.0
+!
+interface BDI20
+ ip vrf forwarding ABC
+ ip address 192.168.20.3 255.255.255.0
+ ip ospf network point-to-point
+ ip ospf 10 area 0
+!
+interface BDI30
+ ip vrf forwarding ABC
+ ip address 192.168.30.3 255.255.255.0
+!
+interface BDI40
+ ip address 192.168.40.3 255.255.255.0
+!
+router ospf 10 vrf ABC
+ redistribute bgp 34 subnets
+ router-id 1.11.111.1
+ priority 0
+ network 10.10.10.1 0.0.0.0 area 15
+ network 172.16.35.1 0.0.0.0 area 15
+ network 192.168.35.0 0.0.0.255 area 15
+router ospf 1
+!
+router rip
+ !
+ address-family ipv4 vrf ABC
+  redistribute bgp 34 metric transparent
+  network 192.168.30.0
+  no auto-summary
+  version 2
+ exit-address-family
+!
+router bgp 34
+ bgp log-neighbor-changes
+ no bgp default ipv4-unicast
+ neighbor 172.16.4.4 remote-as 34
+ neighbor 172.16.4.4 update-source Loopback0
+ !
+ address-family ipv4
+ exit-address-family
+ !
+ address-family vpnv4
+  neighbor 172.16.4.4 activate
+  neighbor 172.16.4.4 send-community extended
+ exit-address-family
+ !
+ address-family ipv4 vrf ABC
+  redistribute static
+  redistribute ospf 10 match internal external 1 external 2
+  redistribute rip
+  neighbor 192.168.210.2 remote-as 1
+  neighbor 192.168.210.2 activate
+  neighbor 192.168.220.2 remote-as 2
+  neighbor 192.168.220.2 activate
+ exit-address-family
+!
+
+policy-map EXTERNAL_CBWFQ
+  class IP_PREC_HIGH
+    priority percent 10
+    police cir percent 10
+      conform-action transmit
+      exceed-action drop
+  class IP_PREC_MEDIUM
+    bandwidth percent 50
+    queue-limit 100
+  class class-default
+    bandwidth percent 40
+    queue-limit 100
+policy-map SHAPE_HEIR
+  class ALL
+    shape average 630000
+    service-policy EXTERNAL_CBWFQ
+!
+
+virtual-service csr_mgmt
+!
+ip forward-protocol nd
+!
+no ip http server
+no ip http secure-server
+ip route vrf ABC 40.40.40.1 255.255.255.255 192.168.40.1
+!
+!
+mpls ldp router-id Loopback0 force
+!
+!
+control-plane
+!
+ !
+ !
+ !
+ !
+!
+archive
+ log config
+  logging enable
+  hidekeys
+ path ftp://ns.foo.com//tftpboot/Foo-archive
+!
+!
+!
+line con 0
+ exec-timeout 0 0
+ privilege level 15
+ logging synchronous
+ stopbits 1
+line vty 0
+ login
+line vty 1
+ login
+ length 0
+line vty 2 4
+ login
+!
+!
+end

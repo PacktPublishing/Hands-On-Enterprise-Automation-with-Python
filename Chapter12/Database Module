@@ -1,0 +1,122 @@
+
+{{previously we generated system reports}}
+
+The first thing we should do is setup the database and play with SQL. we will work on MySQL but python can interact with other DBMS (Database Management Systems) such as Oracle, Mircorost SQL and Postgres..
+
+create a virtual machine or on the automation server First install mysql
+{{MYSQL Installation}}
+
+
+Second, start the mysql "systemctl start mysql"
+
+login to mysql
+
+#mysql -u root -p
+
+-u: the sql username
+-p: sql will prompt you for the password
+
+
+>> MySQL version will be printed
+
+
+Third, we will create our database (without further ado)
+
+#create database NetMon; #this will create the database
+
+#show databases
+
+there're other database like information_schema, mysql and performance_schema. Don't worry about them as they shipped by default with SQL server
+
+Now we will create user that will be used to administrate this database
+
+> create user 'bassim'@"%" identified by 'python';
+
+now switch to the database
+> use NetMon;
+
+Now we need to tell the SQL server to give all permissions on the created database to the user
+
+> grant all on NetMon.* to 'bassim@'%';
+
+"notice you should run every command with the the semicolon or otherwise the mysql will assume there're more input"
+
+Now it's time to create SQL tables that used to store information using python. 
+
+Table1:
+    CPU consumption average associated with timestamp
+
+Table2:
+    Memory consumption average for process associated with timestamp
+
+Table3:
+    Network traffic average associated with timestamp
+
+we will create a script that query the server for multiple data and insert them into our created mysql database
+
+{{Visio Diagram}}
+
+create table NetworkDevices (Hostname VARCHAR(30), MACAddr VARCHAR(20) PRIMARY KEY, Vendor VARCHAR(10), Model VARCHAR(10), Image VARCHAR(50), IOSVersion VARCHAR(20), SerialNo VARCHAR(30), Uptime INT, CPUModel VARCHAR(20), CPUSpeed VARCHAR(10), SerialIntfNo INT, CiscoNeighbors VARCHAR(200), IntRoutingPro VARCHAR(30), ExtRoutingPro VARCHAR(30));
+
+when you're creating a table, you should specify column type. for example the Hostname is a string with 30 characters maximum 
+Float()
+
+
+>> show tables;
+
+To show the table structure
+>> describe <name_of_the_table>;
+
+>> Insert into <table_name> values <>
+Then change a few values and insert again
+
+You can verify the data using the select
+
+>> select * from <table_name>
+
+========
+video 2
+========
+create a simple sql.py file
+
+    import MySQLdb as mdb
+    sql_host = "localhost"
+    sql_username = "bassim"
+    sql_password = "python"
+    sql_database = "NetMon"
+
+    sql_connection = mdb.connect(host,username,password,databse)
+
+    print sql_connection
+
+now let's use the sql_connection
+
+next step is to create cursor object. The purpose of the cusor is to help you execute many commands on the database
+
+
+    curosr = sql_connection.cursor()
+
+it's time to execute commands
+    
+    cursor.execute("use NetMon") #The semicolon could be escaped
+    cursor.execute("create table FromPython(.........)")
+    sql.connection.commit() #This will save the changes
+
+    #Finally close the connection
+    sql_connection.close()
+
+
+execute the `show tables;` to validate the table creation.
+
+    cursor.execute("insert into FromPython() values()")
+
+
+selecting data from mysql in done using execute() + fetch(). The result could be stored in variable
+    fetchone() //return only one row
+    fetchmany(num) //return the number of rows you entered
+    fetchall() //return all rows
+
+    cursor.execute("select * from FromPython")
+    output = cursor.fetchone()
+    print output
+

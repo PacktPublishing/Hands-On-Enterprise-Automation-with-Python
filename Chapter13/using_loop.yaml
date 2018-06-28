@@ -1,0 +1,14 @@
+- hosts: infra
+  remote_user: root
+
+  tasks:
+    - name: "Modifying Packages"
+      yum: name={{ item.name }} state={{ item.state }}
+      with_items:
+        - { name: python-keyring-5.0-1.el7.noarch, state: absent }
+        - { name: python-django, state: absent }
+        - { name: python-django-bash-completion, state: absent }
+        - { name: httpd, state: present }
+        - { name: httpd-tools, state: present }
+        - { name: python-qpid, state: present }
+      when: ansible_distribution == "CentOS"

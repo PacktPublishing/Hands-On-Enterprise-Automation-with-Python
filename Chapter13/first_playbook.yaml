@@ -1,0 +1,9 @@
+- hosts: centos-servers
+  remote_user: root
+
+  tasks:
+    - name: Install openssh
+      yum: pkg=openssh-server state=installed
+
+    - name: Start the openssh
+      service: name=sshd state=started enabled=yes

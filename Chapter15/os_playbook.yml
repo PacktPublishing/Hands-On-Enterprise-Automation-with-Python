@@ -1,0 +1,72 @@
+---
+- hosts: localhost
+  vars:
+      os_server: '10.10.10.150'
+  gather_facts: yes
+  connection: local
+  environment:
+    OS_USERNAME: admin
+    OS_PASSWORD: access123
+    OS_AUTH_URL: http://{{ os_server }}:5000/v3
+    OS_TENANT_NAME: admin
+    OS_REGION_NAME: RegionOne
+    OS_USER_DOMAIN_NAME: Default
+    OS_PROJECT_DOMAIN_NAME: Default
+
+  tasks:
+    - name: "Upload the Cirros Image"
+      os_image:
+        name: Cirros_Image
+        container_format: bare
+        disk_format: qcow2
+        state: present
+        filename: /root/cirros-0.4.0-x86_64-disk.img
+      ignore_errors: yes
+
+
+
+    - name: "CREATE CIRROS_FLAVOR"
+      os_nova_flavor:
+        state: present
+        name: CIRROS_FLAVOR
+        ram: 2048
+        vcpus: 4
+        disk: 35
+      ignore_errors: yes
+
+
+    - name: "Create the Cirros Network"
+      os_network:
+        state: present
+        name: Cirros_network
+        external: True
+        shared: True
+      register: Cirros_network
+      ignore_errors: yes
+
+
+    - name: "Create Subnet for The network Cirros_network"
+      os_subnet:
+        state: present
+        network_name: "{{ Cirros_network.id }}"
+        name: Cirros_network_subnet
+        ip_version: 4
+        cidr: 10.10.128.0/18
+        gateway_ip: 10.10.128.1
+        enable_dhcp: yes
+        dns_nameservers:
+          - 8.8.8.8
+      register: Cirros_network_subnet
+      ignore_errors: yes
+
+
+    - name: "Create Cirros Machine on Compute"
+      os_server:
+        state: present
+        name: ansible_instance
+        image: Cirros_Image
+        flavor: CIRROS_FLAVOR
+        security_groups: default
+        nics:
+          - net-name: Cirros_network
+      ignore_errors: yes

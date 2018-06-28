@@ -1,0 +1,64 @@
+- name: Provision New VM
+  hosts: localhost
+  connection: local
+  vars:
+    - VM_NAME: DevOps
+    - ESXI_HOST: 10.10.10.115
+    - USERNAME: root
+    - PASSWORD: access123
+  tasks:
+  
+    - name: current time
+      command: date +%D
+      register: current_time
+  
+    - name: Check for vSphere access parameters
+      fail: msg="Must set vsphere_login and vsphere_password in a Vault"
+      when: (USERNAME is not defined) or (PASSWORD is not defined)
+  
+    - name: debug vCenter hostname
+      debug: msg="vcenter_hostname = '{{ ESXI_HOST }}'"
+      
+    - name: debug the time
+      debug: msg="Time is = '{{ current_time }}'"
+
+  
+    - name: "Provision the VM"
+      vmware_guest:
+        hostname: "{{ ESXI_HOST }}"
+        username: "{{ USERNAME }}"
+        password: "{{ PASSWORD }}"
+        datacenter: ha-datacenter
+        validate_certs: False
+        name: "{{ VM_NAME }}"
+        folder: /
+        guest_id: centos64Guest
+        state: poweredon
+        force: yes
+        disk:
+          - size_gb: 100
+            type: thin21137
+            datastore: datastore1
+
+        networks:
+          - name: network1
+            device_type: e1000
+#            mac: ba:ba:ba:ba:01:02
+#            wake_on_lan: True
+
+          - name: network2
+            device_type: e1000
+
+        hardware:
+          memory_mb: 4096
+          num_cpus: 4
+          num_cpu_cores_per_socket: 2
+          hotadd_cpu: True
+          hotremove_cpu: True
+          hotadd_memory: True
+          scsi: lsilogic
+          
+        cdrom:
+          type: "iso"
+          iso_path: "[datastore1] ISO Room/CentOS-7-x86_64-Minimal-1708.iso"
+      register: result

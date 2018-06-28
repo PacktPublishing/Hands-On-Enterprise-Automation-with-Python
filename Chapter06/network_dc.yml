@@ -1,0 +1,137 @@
+---
+dc1:
+  GW:
+    eve_port: 32773
+    device_template: vIOSL3_Template
+    hostname: R1
+    mgmt_intf: gig0/0
+    mgmt_ip: 10.10.88.110
+    mgmt_subnet: 255.255.255.0
+    enabled_ports:
+      - gig0/0
+      - gig0/1
+      - gig0/2
+
+
+  switch1:
+    eve_port: 32769
+    device_template: vIOSL2_Template
+    hostname: SW1
+    mgmt_intf: gig0/0
+    mgmt_ip: 10.10.88.111
+    mgmt_subnet: 255.255.255.0
+    interfaces:
+      gig0/1:
+        vlan: [1,10,20,200]
+        description: TO_DSW2_1
+        mode: trunk
+
+      gig0/2:
+        vlan: [1,10,20,200]
+        description: TO_DSW2_2
+        mode: trunk
+
+      gig0/3:
+        vlan: [1,10,20,200]
+        description: TO_ASW3
+        mode: trunk
+
+      gig1/0:
+        vlan: [1,10,20,200]
+        description: TO_ASW4
+        mode: trunk
+    enabled_ports:
+      - gig0/0
+      - gig1/1
+
+  switch2:
+    eve_port: 32770
+    device_template: vIOSL2_Template
+    hostname: SW2
+    mgmt_intf: gig0/0
+    mgmt_ip: 10.10.88.112
+    mgmt_subnet: 255.255.255.0
+    interfaces:
+      gig0/1:
+        vlan: [1,10,20,200]
+        description: TO_DSW1_1
+        mode: trunk
+
+      gig0/2:
+        vlan: [1,10,20,200]
+        description: TO_DSW1_2
+        mode: trunk
+
+      gig0/3:
+        vlan: [1,10,20,200]
+        description: TO_ASW3
+        mode: trunk
+
+      gig1/0:
+        vlan: [1,10,20,200]
+        description: TO_ASW4
+        mode: trunk
+    enabled_ports:
+      - gig0/0
+      - gig1/1
+
+  switch3:
+    eve_port: 32769
+    device_template: vIOSL2_Template
+    hostname: SW3
+    mgmt_intf: gig0/0
+    mgmt_ip: 10.10.88.113
+    mgmt_subnet: 255.255.255.0
+    interfaces:
+      gig0/1:
+        vlan: [1,10,20,200]
+        description: TO_DSW1
+        mode: trunk
+
+      gig0/2:
+        vlan: [1,10,20,200]
+        description: TO_DSW2
+        mode: trunk
+
+
+      gig1/0:
+        vlan: 10
+        description: TO_Client1
+        mode: access
+
+      gig1/1:
+        vlan: 20
+        description: TO_Client2
+        mode: access
+    enabled_ports:
+      - gig0/0
+
+  switch4:
+    eve_port: 32770
+    device_template: vIOSL2_Template
+    hostname: SW4
+    mgmt_intf: gig0/0
+    mgmt_ip: 10.10.88.114
+    mgmt_subnet: 255.255.255.0
+    interfaces:
+      gig0/1:
+        vlan: [1,10,20,200]
+        description: TO_DSW2
+        mode: trunk
+
+      gig0/2:
+        vlan: [1,10,20,200]
+        description: TO_DSW1
+        mode: trunk
+
+      gig1/0:
+        vlan: 10
+        description: TO_Client1
+        mode: access
+
+      gig1/1:
+        vlan: 20
+        description: TO_Client2
+        mode: access
+    enabled_ports:
+      - gig0/0

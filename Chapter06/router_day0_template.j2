@@ -1,0 +1,27 @@
+hostname {{ hostname }}
+int {{ mgmt_intf }}
+no shutdown
+ip add {{ mgmt_ip }} {{ mgmt_subnet }}
+
+lldp run
+
+ip domain-name EnterpriseAutomation.net
+ip ssh version 2
+ip scp server enable
+crypto key generate rsa general-keys modulus 1024
+
+snmp-server community public RW
+snmp-server trap link ietf
+snmp-server enable traps snmp linkdown linkup
+snmp-server enable traps syslog
+snmp-server manager
+
+logging history debugging
+logging snmp-trap emergencies
+logging snmp-trap alerts
+logging snmp-trap critical
+logging snmp-trap errors
+logging snmp-trap warnings
+logging snmp-trap notifications
+logging snmp-trap informational
+logging snmp-trap debugging

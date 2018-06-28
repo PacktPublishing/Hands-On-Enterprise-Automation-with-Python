@@ -1,0 +1,13 @@
+---
+- hosts: localhost
+  tasks:
+    - name: create a username
+      user:
+        name: bassem
+        password: "$crypted_value$"
+        groups:
+          - root
+        state: present
+        shell: /bin/bash
+        createhome: yes
+        home: /home/bassem

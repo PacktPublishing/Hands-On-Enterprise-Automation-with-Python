@@ -1,0 +1,25 @@
+- hosts: centos-servers
+  vars:
+    - Header: "Welcome to Server facts page generated from ansible playbook"
+  gather_facts: yes
+  tasks:
+    - name: Getting the current date
+      command: date
+      register: date_now
+    - name: Setup webserver
+      yum: pkg=nginx state=installed
+      when: ansible_distribution == "CentOS"
+
+      notify:
+        - enable the service
+        - start the service
+
+    - name: Copying the index page
+      template: src=index.j2 dest=/usr/share/nginx/html/index.html
+
+  handlers:
+    - name: enable the service
+      service: name=nginx enabled=yes
+
+    - name: start the service
+      service: name=nginx state=started

@@ -1,0 +1,11 @@
+- hosts: infra
+  remote_user: root
+
+  tasks:
+    - name: Install openssh
+      yum: pkg=openssh-server state=installed
+      when: ansible_distribution == "CentOS"
+
+    - name: Start the openssh
+      service: name=sshd state=started enabled=yes
+      when: ansible_distribution == "CentOS"

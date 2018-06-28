@@ -1,0 +1,13 @@
+hostname {{ hostname }}
+
+aaa new-model
+aaa session-id unique
+aaa authentication login default local
+aaa authorization exec default local none
+vtp mode transparent
+vlan 10,20,30,40,50,60,70,80,90,100,200
+
+int {{ mgmt_intf }}
+no switchport
+no shut
+ip address {{ mgmt_ip }} {{ mgmt_subnet }}

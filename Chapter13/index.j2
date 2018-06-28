@@ -1,0 +1,23 @@
+<html>
+<head><title>Hello world</title></head>
+<body>
+
+<font size="6" color="green">{{ Header }}</font>
+
+<br>
+<font size="5" color="#ff7f50">Facts about the server</font>
+<br>
+<b>Date Now is:</b> {{ date_now.stdout }}
+
+<font size="4" color="#00008b">
+    <ul>
+        <li>IPv4 Address: {{ ansible_default_ipv4['address'] }}</li>
+        <li>IPv4 gateway: {{ ansible_default_ipv4['gateway'] }}</li>
+        <li>Hostname: {{ ansible_hostname }}</li>
+        <li>Total Memory: {{ ansible_memtotal_mb }}</li>
+        <li>Operating System Family: {{ ansible_os_family }}</li>
+        <li>System Vendor: {{ ansible_system_vendor }}</li>
+    </ul>
+</font>
+</body>
+</html>

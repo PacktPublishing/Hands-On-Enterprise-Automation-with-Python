@@ -1,0 +1,13 @@
+{% include 'router_day0_template.j2' %}
+
+{% if enabled_ports %}
+    {% for port in enabled_ports %}
+        interface {{ port }}
+        no switchport
+        no shutdown
+        mtu 1520
+        duplex auto
+        speed auto
+    {% endfor %}
+
+{% endif %}

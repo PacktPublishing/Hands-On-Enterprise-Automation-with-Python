@@ -1,0 +1,15 @@
+- hosts: localhost
+
+  tasks:
+    - name: create user on windows machine
+      win_user:
+        name: bassem
+        password: 'access123'
+        password_never_expires: true
+        account_disabled: no
+        account_locked: no
+        password_expired: no
+        state: present
+        groups:
+          - Administrators
+          - Users

@@ -1,0 +1,9 @@
+- hosts: infra
+  remote_user: root
+
+  tasks:
+    - name: Install openssh
+      apt: pkg=open-vm-tools state=present
+      when:
+        - ansible_os_family == "Debian"
+        - ansible_system_vendor == "VMware, Inc."

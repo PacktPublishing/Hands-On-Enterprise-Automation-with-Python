@@ -1,0 +1,33 @@
+- hosts: centos-servers
+  remote_user: root
+
+  tasks:
+    - name: "Install KVM"
+      yum: name={{ item.name }} state={{ item.state }}
+      with_items:
+        - { name: qemu-kvm, state: installed }
+        - { name: libvirt, state: installed }
+        - { name: virt-install, state: installed }
+        - { name: bridge-utils, state: installed }
+
+      notify:
+        - load sysctl
+        - load kvm at boot
+        - enable kvm
+
+  handlers:
+    - name: load sysctl
+      command: sysctl -p
+
+    - name: enable kvm
+      command: "{{ item.name }}"
+      with_items:
+        - {name: modprobe -a kvm}
+        - {name: modprobe 8021q}
+        - {name: udevadm trigger}
+
+    - name: load kvm at boot
+      lineinfile: dest=/etc/modules state=present create=True line={{ item.name }}
+      with_items:
+        - {name: kvm}
+

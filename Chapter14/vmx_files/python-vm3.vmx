@@ -1,0 +1,54 @@
+# mkdir /vmfs/volumes/datastore1/python-vm3
+# cd /vmfs/volumes/datastore1/python-vm3
+# vi python-vm3.vmx
+# vmkfstools -c 20g -a lsilogic -d zeroedthick python-vm3.vmdk
+# vim-cmd solo/registervm /vmfs/volumes/datastore1/python-vm3/python-vm3.vmx
+
+.encoding = "UTF-8"
+vhv.enable = "TRUE"
+config.version = "8"
+virtualHW.version = "8"
+
+vmci0.present = "TRUE"
+hpet0.present = "TRUE"
+displayName = "python-vm3"
+
+# Specs
+memSize = "3072"
+numvcpus = "1"
+cpuid.coresPerSocket = "2"
+
+
+# HDD
+scsi0.present = "TRUE"
+scsi0.virtualDev = "lsilogic"
+scsi0 : 0.deviceType = "scsi-hardDisk"
+scsi0 : 0.fileName = "python-vm3.vmdk"
+scsi0 : 0.present = "TRUE"
+
+# Floppy
+floppy0.present = "false"
+
+
+# CDRom
+ide1 : 0.present = "TRUE"
+ide1 : 0.deviceType = "cdrom-image"
+ide1 : 0.fileName = "/vmfs/volumes/datastore1/ISO Room/windows_7_ultimate_sp1_ x86-x64_bg-en_IE10_ April_2013.iso"
+
+
+# Networking
+ethernet0.virtualDev = "e1000"
+ethernet0.networkName = "network3"
+ethernet0.addressType = "generated"
+ethernet0.present = "TRUE"
+
+# VM Type
+guestOS = "windows7-64" #centos-64 or ubuntu-64 or windows7-64
+
+# VMWare Tools
+toolScripts.afterPowerOn = "TRUE"
+toolScripts.afterResume = "TRUE"
+toolScripts.beforeSuspend = "TRUE"
+toolScripts.beforePowerOff = "TRUE"
+tools.remindInstall = "TRUE"
+tools.syncTime = "FALSE"

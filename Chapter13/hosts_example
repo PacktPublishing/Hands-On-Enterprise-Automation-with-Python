@@ -1,0 +1,22 @@
+[all:children]
+web-servers
+db-servers
+
+[web-servers]
+web01 ansible_ssh_host=192.168.10.10
+
+
+[db-servers]
+db01 ansible_ssh_host=192.168.10.11
+db02 ansible_ssh_host=192.168.10.12
+
+[all:vars]
+ansible_ssh_user=root
+ansible_ssh_pass=access123
+
+[db-servers:vars]
+ansible_ssh_user=root
+ansible_ssh_pass=access123
+
+[local]
+127.0.0.1 ansible_connection=local ansible_python_interpreter="/usr/bin/python"

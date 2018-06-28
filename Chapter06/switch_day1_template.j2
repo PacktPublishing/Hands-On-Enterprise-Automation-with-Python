@@ -1,0 +1,39 @@
+{% include 'switch_day0_template.j2' %}
+
+{% if enabled_ports %}
+    {% for port in enabled_ports %}
+        interface {{ port }}
+        no switchport
+        no shutdown
+        mtu 1520
+        duplex auto
+        speed auto
+
+    {% endfor %}
+{% endif %}
+
+{% if interfaces %}
+    {% for intf,intf_config in interfaces.items() %}
+        interface {{ intf }}
+        description "{{ intf_config['description'] }}"
+        no shutdown
+        duplex full
+        {% if intf_config['mode'] %}
+            {# -#}
+            {% if intf_config['mode'] == "access" %}
+                switchport mode {{ intf_config['mode'] }}
+                switchport access vlan {{ intf_config['vlan'] }}
+                {# -#}
+            {% elif intf_config['mode'] == "trunk" %}
+                switchport {{ intf_config['mode'] }} encapsulation dot1q
+                switchport mode trunk
+                switchport trunk allowed vlan {{ intf_config['vlan']|join(',') }}
+                {# -#}
+
+                {# -#}
+            {% endif %}
+        {% endif %}
+    {% endfor %}
+{% endif %}
+
+

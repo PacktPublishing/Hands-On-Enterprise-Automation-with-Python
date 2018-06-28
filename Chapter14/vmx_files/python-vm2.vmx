@@ -1,0 +1,54 @@
+# mkdir /vmfs/volumes/datastore1/python-vm2
+# cd /vmfs/volumes/datastore1/python-vm2
+# vi python-vm2.vmx
+# vmkfstools -c 20g -a lsilogic -d zeroedthick python-vm2.vmdk
+# vim-cmd solo/registervm /vmfs/volumes/datastore1/python-vm2/python-vm2.vmx
+
+.encoding = "UTF-8"
+vhv.enable = "TRUE"
+config.version = "8"
+virtualHW.version = "8"
+
+vmci0.present = "TRUE"
+hpet0.present = "TRUE"
+displayName = "python-vm2"
+
+# Specs
+memSize = "2048"
+numvcpus = "2"
+cpuid.coresPerSocket = "2"
+
+
+# HDD
+scsi0.present = "TRUE"
+scsi0.virtualDev = "lsilogic"
+scsi0 : 0.deviceType = "scsi-hardDisk"
+scsi0 : 0.fileName = "python-vm2.vmdk"
+scsi0 : 0.present = "TRUE"
+
+# Floppy
+floppy0.present = "false"
+
+
+# CDRom
+ide1 : 0.present = "TRUE"
+ide1 : 0.deviceType = "cdrom-image"
+ide1 : 0.fileName = "/vmfs/volumes/datastore1/ISO Room/CentOS-7-x86_64-Minimal-1708.iso"
+
+
+# Networking
+ethernet0.virtualDev = "e1000"
+ethernet0.networkName = "networ2"
+ethernet0.addressType = "generated"
+ethernet0.present = "TRUE"
+
+# VM Type
+guestOS = "centos-64" #centos-64 or ubuntu-64 or windows7-64
+
+# VMWare Tools
+toolScripts.afterPowerOn = "TRUE"
+toolScripts.afterResume = "TRUE"
+toolScripts.beforeSuspend = "TRUE"
+toolScripts.beforePowerOff = "TRUE"
+tools.remindInstall = "TRUE"
+tools.syncTime = "FALSE"

@@ -1,0 +1,54 @@
+# mkdir /vmfs/volumes/datastore1/{{ vm_name }}
+# cd /vmfs/volumes/datastore1/{{ vm_name }}
+# vi {{ vm_name }}.vmx
+# vmkfstools -c {{ vm_hdd_size }}g -a lsilogic -d zeroedthick {{ vm_name }}.vmdk
+# vim-cmd solo/registervm /vmfs/volumes/datastore1/{{ vm_name }}/{{ vm_name }}.vmx
+
+.encoding = "UTF-8"
+vhv.enable = "TRUE"
+config.version = "8"
+virtualHW.version = "8"
+
+vmci0.present = "TRUE"
+hpet0.present = "TRUE"
+displayName = "{{ vm_name }}"
+
+# Specs
+memSize = "{{ vm_memory_size }}"
+numvcpus = "{{ vm_cpu }}"
+cpuid.coresPerSocket = "{{ cpu_per_socket }}"
+
+
+# HDD
+scsi0.present = "TRUE"
+scsi0.virtualDev = "lsilogic"
+scsi0:0.deviceType = "scsi-hardDisk"
+scsi0:0.fileName = "{{ vm_name }}.vmdk"
+scsi0:0.present = "TRUE"
+
+# Floppy
+floppy0.present = "false"
+
+
+# CDRom
+ide1:0.present = "TRUE"
+ide1:0.deviceType = "cdrom-image"
+ide1:0.fileName = "/vmfs/volumes/datastore1/ISO Room/{{ vm_image }}"
+
+
+# Networking
+ethernet0.virtualDev = "e1000"
+ethernet0.networkName = "{{ vm_network1 }}"
+ethernet0.addressType = "generated"
+ethernet0.present = "TRUE"
+
+# VM Type
+guestOS = "{{ vm_guest_os }}" #centos-64 or ubuntu-64 or windows7-64
+
+# VMWare Tools
+toolScripts.afterPowerOn = "TRUE"
+toolScripts.afterResume = "TRUE"
+toolScripts.beforeSuspend = "TRUE"
+toolScripts.beforePowerOff = "TRUE"
+tools.remindInstall = "TRUE"
+tools.syncTime = "FALSE"

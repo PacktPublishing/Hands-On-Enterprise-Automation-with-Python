@@ -1,0 +1,11 @@
+- hosts: routers
+
+- tasks:
+    - name: "show the ospf neighbor status"
+      raw: show ip ospf neighbor
+      register: neighbors
+
+    - name: "Validate the Neighbors"
+      debug:
+        msg: "OSPF neighbors stuck"
+      when: ('EXSTART' in neighbors.stdout) or ('EXCHANGE' in neighbors.stdout)

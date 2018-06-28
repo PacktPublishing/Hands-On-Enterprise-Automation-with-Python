@@ -1,0 +1,40 @@
+[all:children]
+centos-servers
+ubuntu-servers
+
+[centos-servers]
+centos-machine01 ansible_ssh_host = 10.10.10.193
+
+[ubuntu-servers]
+ubuntu-machine01 ansible_ssh_host = 10.10.10.140
+
+[all:vars]
+ansible_ssh_user = root
+ansible_ssh_pass = access123
+
+[infra:children]
+centos-servers
+ubuntu-servers
+
+
+
+[infra:vars]
+ansible_ssh_user = root
+ansible_ssh_pass = access123
+
+
+
+[centos-servers:vars]
+ansible_ssh_user = root
+ansible_ssh_pass = access123
+
+[ubuntu-servers:vars]
+ansible_ssh_user = root
+ansible_ssh_pass = access123
+
+[routers]
+gateway ansible_ssh_host = 10.10.88.110 ansible_ssh_user=cisco ansible_ssh_pass=cisco
+
+
+[local]
+127.0.0.1 ansible_connection = local ansible_python_interpreter="/usr/bin/python"

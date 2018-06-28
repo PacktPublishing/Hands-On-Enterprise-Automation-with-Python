@@ -1,0 +1,30 @@
+---
+my_datacenter:
+  GW:
+    eve_port: 32773
+    device_template: vIOSL3_Template
+    hostname: R1
+    mgmt_intf: gig0/0
+    mgmt_ip: 10.10.88.110
+    mgmt_subnet: 255.255.255.0
+    enabled_ports:
+      - gig0/0
+      - gig0/1
+      - gig0/2
+
+
+  switch1:
+    eve_port: 32769
+    device_template: vIOSL2_Template
+    hostname: SW1
+    mgmt_intf: gig0/0
+    mgmt_ip: 10.10.88.111
+    mgmt_subnet: 255.255.255.0
+
+  switch2:
+    eve_port: 32770
+    device_template: vIOSL2_Template
+    hostname: SW2
+    mgmt_intf: gig0/0
+    mgmt_ip: 10.10.88.112
+    mgmt_subnet: 255.255.255.0
