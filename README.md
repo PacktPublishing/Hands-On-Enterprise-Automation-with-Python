@@ -61,7 +61,7 @@ downloads/​HandsOnEnterpriseAutomationwithPython_​ColorImages.​pdf).
 
 ## Get to Know the Author
 **Bassem Aly**
-Bassem Aly is an experienced SDN/NFV solution consultant at Juniper Networks and has been working in the Telco industry for last 9 years. He focused on designing and implementing next generation by leveraging different automation and devops frameworks.Also he has extensive experience in architecting and deploying telco applications over the openstack. Bassem also conducts corporate training on network automation & network programmability using python and ansible.
+Bassem Aly is an experienced SDN/NFV solution consultant at Juniper Networks and has been working in the Telco industry for last 9 years. He focused on designing and implementing next generation by leveraging different automation and devops frameworks. Also he has extensive experience in architecting and deploying telco applications over the openstack. Bassem also conducts corporate training on network automation & network programmability using python and ansible.
 
 ### Suggestions and Feedback
 [Click here](https://docs.google.com/forms/d/e/1FAIpQLSdy7dATC6QmEL81FIUuymZ0Wy9vH1jHkvpY57OiMeKGqib_Ow/viewform) if you have any feedback or suggestions.
